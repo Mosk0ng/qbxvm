@@ -4,7 +4,7 @@ entry start
 include 'win64_helpers.inc'
 include 'qbx_instructions.inc'
 include 'qbx_insn_helpers.inc'
-include 'qbx_registers.inc'
+include 'qbx_reg.inc'
 
 ; import tables.
 section '.idata' import readable writeable
@@ -188,10 +188,69 @@ section '.code' code readable executable
              endinsn
         }
 
+        ;jmpd jmp direct address
+jmpd_:  insn jmpd
+             mov si, word [qbx_mem + qip]
+        endinsn
+
+        ;jmpi jmp address in regs
+        rept 4 reg:0{
+             insn jmpq#reg
+                  mov si, q#reg
+             endinsn
+        }
+        ; if true, jmp to jmpd_ to exec
+        _true:
+                jmp jmpd_
+        endinsn
+        insn jeq
+             push qflags
+             and qflags, 0x40
+             cmp qflags, 0x40
+             pop qflags
+             je _true
+        endinsn
+
+        insn jneq
+             push qflags
+             and qflags, 0x40
+             cmp qflags, 0x40
+             pop qflags
+             jne _true
+        endinsn
+
+        endinsn
+
+        ; if CF = 1
+        insn jbl
+             push qflags
+             and qflags, 0x1
+             cmp qflags, 0x1
+             pop qflags
+             je _true
+        endinsn
+
+        insn jnbl
+             push qflags
+             and qflags, 0x1
+             cmp qflags, 0x1
+             pop qflags
+             jne _true
+        endinsn
+
+        insn comp
+             update_qbx_flags = 1
+             cmp q0, q1
+        endinsn
+
+        insn compi
+             update_qbx_flags = 1
+             mov q1, word [qbx_mem + qip]
+             add qip, 2
+             cmp q0, q1
+        endinsn
+
         update_flags_advance:
                 lahf
                 mov qflags, rax
                 jmp advance
-
-
-

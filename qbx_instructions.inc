@@ -78,5 +78,16 @@ common
       popwq0, \
       popwq1, \
       popwq2, \
-      popwq3
+      popwq3, \
+      jmpd, \
+      jmpq0, \
+      jmpq1, \
+      jmpq2, \
+      jmpq3, \
+      jeq, \
+      jneq, \
+      jbl, \
+      jnbl, \
+      comp, \
+      compi
 }
