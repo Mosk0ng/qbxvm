@@ -6,7 +6,7 @@
 
 ## Why do this?
 
-fork to learn something about emulator, it will not be applied to business environment and large projects.
+To learn something about emulator, it will not be applied to business environment and large projects.
 
 
 
